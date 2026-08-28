@@ -15,8 +15,9 @@ function Header() {
           src="/logo.svg"
           alt="logo"
           width={160}
-          height={40}
+          height={20}
           priority
+          style={{ width: 'auto', height: 'auto' }}
         />
       </Link>
       <div className="flex items-center gap-4">

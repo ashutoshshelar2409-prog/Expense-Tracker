@@ -20,9 +20,10 @@ export default function AuthLayout({ children }) {
                 src="/logo.svg"
                 alt="Expense-Tracker Logo"
                 width={210}
-                height={50}
+                height={26}
                 className="brightness-0 invert"
                 priority
+                style={{ width: 'auto', height: 'auto' }}
               />
             </Link>
 
@@ -45,8 +46,9 @@ export default function AuthLayout({ children }) {
                 src="/logo.svg"
                 alt="Expense-Tracker Logo"
                 width={180}
-                height={42}
+                height={22}
                 priority
+                style={{ width: 'auto', height: 'auto' }}
               />
             </Link>
           </div>
