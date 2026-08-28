@@ -9,7 +9,7 @@ This project is a Next.js (App Router) Expense Tracker application integrated wi
 ### 1. Created Auth Split-Screen Layout
 - **File**: [`app/(auth)/layout.jsx`](file:///c:/Users/ASHUTOSH/OneDrive/Pictures/Desktop/S.E.T/expense-tracker/app/(auth)/layout.jsx)
 - **Description**: Implemented a responsive 12-column HyperUI split-screen layout (`lg:grid-cols-12`) shared by all authentication pages:
-  - **Left Section (`lg:col-span-5` / `xl:col-span-6`)**: Features a full-height dark background image with gradient overlay, app branding logo, main heading (*"Welcome to Expense Tracker 🦑"*), and descriptive tagline.
+  - **Left Section (`lg:col-span-5` / `xl:col-span-6`)**: Features a full-height dark background image with gradient overlay, app branding logo, main heading (*"Welcome to Expense Tracker "*), and descriptive tagline.
   - **Right Section (`lg:col-span-7` / `xl:col-span-6`)**: Centered flexbox container housing Clerk's `<SignIn />` or `<SignUp />` form cards.
 
 ### 2. Wired Up Sign-In & Sign-Up Routes
