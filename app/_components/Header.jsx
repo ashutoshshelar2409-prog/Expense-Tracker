@@ -14,10 +14,10 @@ function Header() {
         <Image
           src="/logo.svg"
           alt="logo"
-          width={160}
-          height={20}
+          width={200}
+          height={200}
           priority
-          style={{ width: 'auto', height: 'auto' }}
+          //style={{ width: 'auto', height: 'auto' }}
         />
       </Link>
       <div className="flex items-center gap-4">
