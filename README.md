@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Expense Tracker - Clerk Authentication & HyperUI Sign-In Setup
+
+This project is a Next.js (App Router) Expense Tracker application integrated with [Clerk](https://clerk.com/) for user authentication and styled using [HyperUI](https://www.hyperui.dev/) split-screen components.
+
+---
+
+## Summary of Changes Made
+
+### 1. Created Auth Split-Screen Layout
+- **File**: [`app/(auth)/layout.jsx`](file:///c:/Users/ASHUTOSH/OneDrive/Pictures/Desktop/S.E.T/expense-tracker/app/(auth)/layout.jsx)
+- **Description**: Implemented a responsive 12-column HyperUI split-screen layout (`lg:grid-cols-12`) shared by all authentication pages:
+  - **Left Section (`lg:col-span-5` / `xl:col-span-6`)**: Features a full-height dark background image with gradient overlay, app branding logo, main heading (*"Welcome to Expense Tracker 🦑"*), and descriptive tagline.
+  - **Right Section (`lg:col-span-7` / `xl:col-span-6`)**: Centered flexbox container housing Clerk's `<SignIn />` or `<SignUp />` form cards.
+
+### 2. Wired Up Sign-In & Sign-Up Routes
+- **Files**:
+  - [`app/(auth)/sign-in/[[...sign-in]]/page.jsx`](file:///c:/Users/ASHUTOSH/OneDrive/Pictures/Desktop/S.E.T/expense-tracker/app/(auth)/sign-in/[[...sign-in]]/page.jsx)
+  - [`app/(auth)/sign-up/[[...sign-up]]/page.jsx`](file:///c:/Users/ASHUTOSH/OneDrive/Pictures/Desktop/S.E.T/expense-tracker/app/(auth)/sign-up/[[...sign-up]]/page.jsx)
+- **Description**: Rendered Clerk's catch-all `<SignIn />` and `<SignUp />` components within the `(auth)` route group.
+
+### 3. Middleware Optimization
+- **File**: [`middleware.ts`](file:///c:/Users/ASHUTOSH/OneDrive/Pictures/Desktop/S.E.T/expense-tracker/middleware.ts)
+- **Description**: Configured route protection using Clerk's `clerkMiddleware()` and `createRouteMatcher()`. Protected `/dashboard(.*)` routes while keeping public routes (`/`, `/sign-in`, `/sign-up`) accessible.
+
+### 4. Header Auth Controls & Navigation
+- **File**: [`app/_components/Header.jsx`](file:///c:/Users/ASHUTOSH/OneDrive/Pictures/Desktop/S.E.T/expense-tracker/app/_components/Header.jsx)
+- **Description**: Integrated Clerk's `useUser()` hook and `<UserButton />`:
+  - Displays a **Dashboard** button and `<UserButton />` when user is signed in.
+  - Displays a **Get Started** button linking to `/sign-in` when user is signed out.
+
+### 5. Hero CTA Update
+- **File**: [`app/_components/Hero.jsx`](file:///c:/Users/ASHUTOSH/OneDrive/Pictures/Desktop/S.E.T/expense-tracker/app/_components/Hero.jsx)
+- **Description**: Updated the primary CTA button to direct users directly to `/sign-in`.
+
+---
+
+## Environment Variables Setup
+
+Ensure your `.env.local` file contains the following Clerk configuration keys:
+
+```env
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
+```
+
+---
 
 ## Getting Started
 
-First, run the development server:
+1. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+2. **Run Development Server**:
+   ```bash
+   npm run dev
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. **View Auth Pages**:
+   - Home Page: `http://localhost:3000`
+   - Sign In Page: `http://localhost:3000/sign-in`
+   - Sign Up Page: `http://localhost:3000/sign-up`
+   - Dashboard: `http://localhost:3000/dashboard` (Protected route)
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+4. **Build Production Application**:
+   ```bash
+   npm run build
+   ```
