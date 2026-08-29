@@ -1,6 +1,6 @@
 import React from 'react'
 
-function BudgetsPage() {
+function Budgets() {
   return (
     <div className='p-5'>
       <h1 className='text-2xl font-bold'>Budgets</h1>
@@ -8,4 +8,4 @@ function BudgetsPage() {
   )
 }
 
-export default BudgetsPage
+export default Budgets
