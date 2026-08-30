@@ -54,7 +54,7 @@ export default function AuthLayout({ children }) {
           </div>
 
           {/* Form Container with guaranteed layout space for Clerk component */}
-          <div className="w-full max-w-md flex justify-center items-center min-h-120">
+          <div className="w-full max-w-md flex justify-center items-center min-h-[400px] py-4">
             {children}
           </div>
         </main>

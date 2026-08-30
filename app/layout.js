@@ -14,11 +14,10 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en"
-    className={`${outfit.variable} h-full antialiased`}>
-    <ClerkProvider>
-    <body className="min-h-full flex flex-col font-sans">{children}</body>
-    </ClerkProvider>
+    <html lang="en" className={`${outfit.variable} h-full antialiased`}>
+      <body className="min-h-full flex flex-col font-sans">
+        <ClerkProvider>{children}</ClerkProvider>
+      </body>
     </html>
   );
-  }
+}
