@@ -37,9 +37,9 @@ function SlideNav() {
 
   const path=usePathname();
 
-  useEffect(()=>{
-    console.log(path)
-  },[path])
+  useEffect(() => {
+    // track active route change if needed
+  }, [path])
   return (
     <div className='h-screen p-5 border-b shadow-md relative flex flex-col justify-between bg-white'>
       <div>
@@ -59,7 +59,7 @@ function SlideNav() {
                  mb-2
                  p-5 cursor-pointer rounded-md
                  hover:text-indigo-600 hover:bg-indigo-50 
-                ${path == menu.path&&'text-primary bg-blue-100'}`}
+                ${path == menu.path && 'text-indigo-600 bg-indigo-100'}`}
               >
               <menu.icons className='w-5 h-5'/>
               {menu.name}

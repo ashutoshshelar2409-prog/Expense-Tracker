@@ -14,10 +14,10 @@ function Header() {
         <Image
           src="/logo.svg"
           alt="logo"
-          width={200}
-          height={200}
+          width={160}
+          height={30}
           priority
-          //style={{ width: 'auto', height: 'auto' }}
+          style={{ width: 'auto', height: 'auto' }}
         />
       </Link>
       <div className="flex items-center gap-4">
@@ -26,7 +26,7 @@ function Header() {
             <Link href="/dashboard">
               <Button variant="outline">Dashboard</Button>
             </Link>
-            <UserButton afterSignOutUrl="/" />
+            <UserButton />
           </>
         ) : (
           <Link href="/sign-in">

@@ -1,6 +1,7 @@
 import { Outfit } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "@/components/ui/toast";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -16,7 +17,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${outfit.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-sans">
-        <ClerkProvider>{children}</ClerkProvider>
+        <ClerkProvider>
+          <Toaster />
+          {children}
+        </ClerkProvider>
       </body>
     </html>
   );

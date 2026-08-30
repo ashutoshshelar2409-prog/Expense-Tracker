@@ -4,7 +4,7 @@ import SlideNav from './_components/SlideNav'
 import DashboardHeader from './_components/DashboardHeader'
 import { db } from '@/utils/dbConfig'
 import { Budgets } from '@/utils/schema'
-import { count, eq } from 'drizzle-orm'
+import { eq } from 'drizzle-orm'
 import { useUser } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
 
@@ -13,17 +13,25 @@ function Dashboardlayout({ children }) {
   const router = useRouter();
 
   useEffect(() => {
-    user && checkUserBudgets();
+    if (user) {
+      checkUserBudgets();
+    }
   }, [user])
 
   const checkUserBudgets = async () => {
-    const result = await db.select()
-      .from(Budgets)
-      .where(eq(Budgets.createdBy, user?.primaryEmailAddress?.emailAddress))
+    try {
+      const email = user?.primaryEmailAddress?.emailAddress;
+      if (!email) return;
+      
+      const result = await db.select()
+        .from(Budgets)
+        .where(eq(Budgets.createdBy, email));
 
-    console.log(result);
-    if (result?.length == 0) {
-      router.replace('/dashboard/budgets')
+      if (result?.length === 0) {
+        router.replace('/dashboard/budgets');
+      }
+    } catch (error) {
+      console.error("Error fetching user budgets:", error);
     }
   }
 
