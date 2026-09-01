@@ -8,10 +8,12 @@ export const Budgets = pgTable('budgets', {
     createdBy: varchar('createdBy').notNull(),
 });
 
-export const Espenses=pgTable('expense',{
-    id:serial('id').primaryKey(),
-    name:varchar('name').notNull(),
-    amount:varchar('amount').notNull(),
-    budgedId:integer('budgetId').references(()=>Budgets.id),
-    createdAt:varchar('createdAt').notNull()
-}) 
+export const Expenses = pgTable('expense', {
+    id: serial('id').primaryKey(),
+    name: varchar('name').notNull(),
+    amount: varchar('amount').notNull(),
+    budgetId: integer('budgetId').references(() => Budgets.id),
+    createdAt: varchar('createdAt').notNull()
+});
+
+export const Espenses = Expenses; 

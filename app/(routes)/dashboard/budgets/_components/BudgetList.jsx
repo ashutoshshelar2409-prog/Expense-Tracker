@@ -3,8 +3,8 @@ import React, { useEffect, useState } from 'react';
 import CreateBudget from './CreateBudget';
 import BudgetItem from './BudgetItem';
 import { db } from '@/utils/dbConfig';
-import { Budgets } from '@/utils/schema';
-import { eq, desc } from 'drizzle-orm';
+import { Budgets, Expenses as ExpensesTable } from '@/utils/schema';
+import { getTableColumns, sql, eq, desc } from 'drizzle-orm';
 import { useUser } from '@clerk/nextjs';
 
 function BudgetList() {
@@ -24,9 +24,14 @@ function BudgetList() {
       const email = user?.primaryEmailAddress?.emailAddress;
       if (!email) return;
 
-      const result = await db.select()
-        .from(Budgets)
+      const result = await db.select({
+        ...getTableColumns(Budgets),
+        totalSpend: sql`COALESCE(sum(CAST(${ExpensesTable.amount} AS NUMERIC)), 0)`.mapWith(Number),
+        totalItem: sql`count(${ExpensesTable.id})`.mapWith(Number),
+      }).from(Budgets)
+        .leftJoin(ExpensesTable, eq(Budgets.id, ExpensesTable.budgetId))
         .where(eq(Budgets.createdBy, email))
+        .groupBy(Budgets.id, Budgets.name, Budgets.amount, Budgets.icon, Budgets.createdBy)
         .orderBy(desc(Budgets.id));
 
       setBudgetList(result || []);

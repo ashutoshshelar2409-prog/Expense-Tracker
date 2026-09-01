@@ -67,10 +67,10 @@ function CreateBudget({ refreshData }) {
   };
 
   return (
-    <div>
+    <div className='w-full'>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger>
-          <div className='group relative h-45 bg-linear-0-to-br from-indigo-50/50 via-slate-50 to-indigo-100/30 p-6 rounded-2xl border-2 border-dashed border-indigo-200/80 hover:border-indigo-500 hover:from-indigo-50 hover:to-indigo-100/60 transition-all duration-300 flex flex-col items-center justify-center gap-3 cursor-pointer shadow-xs hover:shadow-md transform hover:-translate-y-0.5'>
+        <DialogTrigger className='w-full text-left'>
+          <div className='group relative h-45 w-full bg-slate-50/60 hover:bg-indigo-50/40 p-5 rounded-2xl border-2 border-dashed border-slate-300 hover:border-indigo-500 transition-all duration-300 flex flex-col items-center justify-center gap-2.5 cursor-pointer shadow-xs hover:shadow-md transform hover:-translate-y-0.5'>
             <div className='w-12 h-12 rounded-xl bg-indigo-600/10 text-indigo-600 flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white group-hover:scale-110 transition-all duration-300 shadow-xs'>
               <Plus className='w-6 h-6 stroke-[2.5]' />
             </div>
