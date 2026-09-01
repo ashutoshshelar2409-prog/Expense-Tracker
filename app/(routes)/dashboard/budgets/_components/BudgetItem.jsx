@@ -35,7 +35,7 @@ function BudgetItem({ budget }) {
         <div className='w-full bg-slate-100 rounded-full h-2 overflow-hidden'>
           <div
             className='bg-indigo-600 h-2 rounded-full transition-all duration-500'
-            style={{ width: '0%' }}
+            style={{ width: '90%' }}
           />
         </div>
       </div>
