@@ -65,7 +65,7 @@ function EditBudget({ budgetInfo, refreshData }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild={false}>
+      <DialogTrigger>
         <button className='flex gap-2 items-center bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-xl transition-all shadow-sm'>
           <Pen className='w-4 h-4' /> Edit Budget
         </button>

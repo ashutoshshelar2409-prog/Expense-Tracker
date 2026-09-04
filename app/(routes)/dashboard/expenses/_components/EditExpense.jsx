@@ -62,11 +62,8 @@ function EditExpense({ expense, refreshData }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild={false}>
-        <button
-          className='text-slate-400 hover:text-indigo-600 p-1.5 rounded-lg hover:bg-indigo-50 transition-all'
-          title="Edit Expense"
-        >
+      <DialogTrigger>
+        <button className='text-slate-400 hover:text-indigo-600 p-1.5 rounded-lg hover:bg-indigo-50 transition-all' title="Edit Expense">
           <Pen className='w-4 h-4' />
         </button>
       </DialogTrigger>

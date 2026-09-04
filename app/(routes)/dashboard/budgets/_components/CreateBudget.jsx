@@ -70,7 +70,7 @@ function CreateBudget({ refreshData }) {
     <div className='w-full'>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger className='w-full text-left'>
-          <div className='group relative h-45 w-full bg-slate-50/60 hover:bg-indigo-50/40 p-5 rounded-2xl border-2 border-dashed border-slate-300 hover:border-indigo-500 transition-all duration-300 flex flex-col items-center justify-center gap-2.5 cursor-pointer shadow-xs hover:shadow-md transform hover:-translate-y-0.5'>
+          <button type="button" className='group relative h-45 w-full bg-slate-50/60 hover:bg-indigo-50/40 p-5 rounded-2xl border-2 border-dashed border-slate-300 hover:border-indigo-500 transition-all duration-300 flex flex-col items-center justify-center gap-2.5 cursor-pointer shadow-xs hover:shadow-md transform hover:-translate-y-0.5'>
             <div className='w-12 h-12 rounded-xl bg-indigo-600/10 text-indigo-600 flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white group-hover:scale-110 transition-all duration-300 shadow-xs'>
               <Plus className='w-6 h-6 stroke-[2.5]' />
             </div>
@@ -82,7 +82,7 @@ function CreateBudget({ refreshData }) {
                 Set spending limit for a category
               </p>
             </div>
-          </div>
+          </button>
         </DialogTrigger>
 
         <DialogContent className="sm:max-w-106.25 rounded-2xl p-6 bg-white shadow-2xl border border-slate-100">

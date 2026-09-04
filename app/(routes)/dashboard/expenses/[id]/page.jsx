@@ -13,7 +13,8 @@ import EditExpense from '../_components/EditExpense';
 import EditBudget from '../../budgets/_components/EditBudget';
 
 function Expenses({ params }) {
-    const { id } = use(params);
+    const resolvedParams = params && typeof params.then === 'function' ? use(params) : params;
+    const id = resolvedParams?.id;
     const { user } = useUser();
     const router = useRouter();
     const [budgetInfo, setBudgetInfo] = useState();
