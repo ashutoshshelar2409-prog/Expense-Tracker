@@ -7,6 +7,7 @@ import { useUser } from '@clerk/nextjs';
 import { Trash } from 'lucide-react';
 import { toast } from '@/components/ui/toast';
 import Link from 'next/link';
+import EditExpense from './_components/EditExpense';
 
 function ExpensesPage() {
     const { user } = useUser();
@@ -88,10 +89,12 @@ function ExpensesPage() {
                                 </Link>
                             </h2>
                             <h2 className='text-slate-400 text-xs'>{expense.createdAt}</h2>
-                            <div className='text-right pr-2'>
+                            <div className='text-right pr-2 flex items-center justify-end gap-1'>
+                                <EditExpense expense={expense} refreshData={getAllExpenses} />
                                 <button
                                     onClick={() => deleteExpense(expense)}
-                                    className='text-slate-400 hover:text-rose-600 p-1.5 rounded-lg hover:bg-rose-50 transition-all'>
+                                    className='text-slate-400 hover:text-rose-600 p-1.5 rounded-lg hover:bg-rose-50 transition-all'
+                                    title="Delete Expense">
                                     <Trash className='w-4 h-4' />
                                 </button>
                             </div>

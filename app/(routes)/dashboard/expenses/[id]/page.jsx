@@ -9,6 +9,8 @@ import { Trash, Loader2, ArrowLeft } from 'lucide-react';
 import { toast } from '@/components/ui/toast';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import EditExpense from '../_components/EditExpense';
+import EditBudget from '../../budgets/_components/EditBudget';
 
 function Expenses({ params }) {
     const { id } = use(params);
@@ -135,11 +137,14 @@ function Expenses({ params }) {
                     </Link>
                     My Expenses
                 </span>
-                <button
-                    onClick={deleteBudget}
-                    className='flex gap-2 items-center bg-rose-600 hover:bg-rose-700 text-white text-sm font-medium px-4 py-2 rounded-xl transition-all shadow-sm'>
-                    <Trash className='w-4 h-4' /> Delete Budget
-                </button>
+                <div className='flex gap-2 items-center'>
+                    <EditBudget budgetInfo={budgetInfo} refreshData={getBudgetInfo} />
+                    <button
+                        onClick={deleteBudget}
+                        className='flex gap-2 items-center bg-rose-600 hover:bg-rose-700 text-white text-sm font-medium px-4 py-2 rounded-xl transition-all shadow-sm'>
+                        <Trash className='w-4 h-4' /> Delete Budget
+                    </button>
+                </div>
             </h2>
 
             <div className='grid grid-cols-1 md:grid-cols-2 mt-6 gap-6'>
@@ -203,10 +208,12 @@ function Expenses({ params }) {
                                 <h2>{expense.name}</h2>
                                 <h2 className='text-indigo-600 font-semibold'>₹{Number(expense.amount).toLocaleString('en-IN')}</h2>
                                 <h2 className='text-slate-400 text-xs'>{expense.createdAt}</h2>
-                                <div className='text-right pr-2'>
+                                <div className='text-right pr-2 flex items-center justify-end gap-1'>
+                                    <EditExpense expense={expense} refreshData={() => { getBudgetInfo(); getExpensesList(); }} />
                                     <button
                                         onClick={() => deleteExpense(expense)}
-                                        className='text-slate-400 hover:text-rose-600 p-1.5 rounded-lg hover:bg-rose-50 transition-all'>
+                                        className='text-slate-400 hover:text-rose-600 p-1.5 rounded-lg hover:bg-rose-50 transition-all'
+                                        title="Delete Expense">
                                         <Trash className='w-4 h-4' />
                                     </button>
                                 </div>
