@@ -71,3 +71,5 @@ NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
    ```bash
    npm run build
    ```
+5. **Made it compactable with mobile phone**:
+   ```add the lots of feacture and made it workable```
