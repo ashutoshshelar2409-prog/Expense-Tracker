@@ -46,6 +46,21 @@ function Dashboard() {
       <h2 className='font-bold text-3xl'>Hi, {user?.fullName}</h2>
       <p className='text-gray-500'>Here's What Happenning With Your Money, <strong>Let Manage Your Expense</strong></p>
       <CardInfo budgetList={budgetList} loading={loading} />
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-6 gap-4 '>
+        <div className='md:col-span-2'>
+          <BarChartDashboard
+          budgetList={budgetList} />
+        </div>
+        <div className='md:col-span-1'>
+          {budgetList.map((budget) => (
+            <div key={budget.id} className='border border-gray-300 rounded-lg p-4 mb-4'>
+              <h3 className='font-semibold text-lg'>{budget.name}</h3>
+              <p className='text-gray-500'>Total Spent: ₹{budget.totalSpend.toFixed(2)}</p>
+              <p className='text-gray-500'>Total Items: {budget.totalItem}</p>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   )
 }
