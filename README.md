@@ -1,75 +1,138 @@
-# Expense Tracker - Clerk Authentication & HyperUI Sign-In Setup
+# 💰 Smart Expense Tracker
 
-This project is a Next.js (App Router) Expense Tracker application integrated with [Clerk](https://clerk.com/) for user authentication and styled using [HyperUI](https://www.hyperui.dev/) split-screen components.
+A full-stack, mobile-friendly **Expense Tracker Application** built using **Next.js 16 (App Router)**, **React 19**, **Clerk Authentication**, **Drizzle ORM**, **Neon PostgreSQL Database**, **Tailwind CSS v4**, and **Recharts**.
 
----
-
-## Summary of Changes Made
-
-### 1. Created Auth Split-Screen Layout
-- **File**: [`app/(auth)/layout.jsx`](file:///c:/Users/ASHUTOSH/OneDrive/Pictures/Desktop/S.E.T/expense-tracker/app/(auth)/layout.jsx)
-- **Description**: Implemented a responsive 12-column HyperUI split-screen layout (`lg:grid-cols-12`) shared by all authentication pages:
-  - **Left Section (`lg:col-span-5` / `xl:col-span-6`)**: Features a full-height dark background image with gradient overlay, app branding logo, main heading (*"Welcome to Expense Tracker "*), and descriptive tagline.
-  - **Right Section (`lg:col-span-7` / `xl:col-span-6`)**: Centered flexbox container housing Clerk's `<SignIn />` or `<SignUp />` form cards.
-
-### 2. Wired Up Sign-In & Sign-Up Routes
-- **Files**:
-  - [`app/(auth)/sign-in/[[...sign-in]]/page.jsx`](file:///c:/Users/ASHUTOSH/OneDrive/Pictures/Desktop/S.E.T/expense-tracker/app/(auth)/sign-in/[[...sign-in]]/page.jsx)
-  - [`app/(auth)/sign-up/[[...sign-up]]/page.jsx`](file:///c:/Users/ASHUTOSH/OneDrive/Pictures/Desktop/S.E.T/expense-tracker/app/(auth)/sign-up/[[...sign-up]]/page.jsx)
-- **Description**: Rendered Clerk's catch-all `<SignIn />` and `<SignUp />` components within the `(auth)` route group.
-
-### 3. Middleware Optimization
-- **File**: [`middleware.ts`](file:///c:/Users/ASHUTOSH/OneDrive/Pictures/Desktop/S.E.T/expense-tracker/middleware.ts)
-- **Description**: Configured route protection using Clerk's `clerkMiddleware()` and `createRouteMatcher()`. Protected `/dashboard(.*)` routes while keeping public routes (`/`, `/sign-in`, `/sign-up`) accessible.
-
-### 4. Header Auth Controls & Navigation
-- **File**: [`app/_components/Header.jsx`](file:///c:/Users/ASHUTOSH/OneDrive/Pictures/Desktop/S.E.T/expense-tracker/app/_components/Header.jsx)
-- **Description**: Integrated Clerk's `useUser()` hook and `<UserButton />`:
-  - Displays a **Dashboard** button and `<UserButton />` when user is signed in.
-  - Displays a **Get Started** button linking to `/sign-in` when user is signed out.
-
-### 5. Hero CTA Update
-- **File**: [`app/_components/Hero.jsx`](file:///c:/Users/ASHUTOSH/OneDrive/Pictures/Desktop/S.E.T/expense-tracker/app/_components/Hero.jsx)
-- **Description**: Updated the primary CTA button to direct users directly to `/sign-in`.
+Designed with responsive layouts, real-time spending progress bars, Indian Rupee (`₹`) formatting, interactive bar chart analytics, emoji budget customization, modal dialogs, and instant toast notifications.
 
 ---
 
-## Environment Variables Setup
+## ✨ Features
 
-Ensure your `.env.local` file contains the following Clerk configuration keys:
+- 🔐 **Authentication & Protection**: User sign-in & sign-up powered by Clerk with route protection via Next.js `proxy.ts`.
+- 📱 **100% Mobile Responsive Layout**:
+  - Slide-out mobile drawer navigation overlay with auto-close on link selection.
+  - Horizontally scrollable data tables (`overflow-x-auto`) for small viewports.
+  - Adaptive container paddings (`p-4 sm:p-6 md:p-8/10`) for optimal mobile layout fit.
+- 📊 **Interactive Dashboard Analytics**:
+  - Summary metrics for **Total Budget**, **Total Spend**, and **No. of Active Budgets**.
+  - Interactive **Recharts Bar Chart** visualizing Total Spend vs. Budget Limit per category.
+  - Recent Expenses table with edit and single-click deletion.
+  - Animated skeleton loaders while fetching data.
+- 💡 **Budget Management**:
+  - Create, edit, and delete category budgets with customizable target limits.
+  - Emoji picker (`emoji-picker-react`) for custom category icons.
+  - Spending progress bar with real-time percentage indicators.
+- 💸 **Expense Management**:
+  - Add expenses categorized under specific budgets with auto-formatted dates.
+  - Single-click edit expense title & amount via Base UI modal dialogs.
+  - Dedicated expense overview page listing all user expenses across all budgets with budget category tags.
+- 🇮🇳 **Indian Rupee (`₹`) Formatting**: Built-in currency formatting (`en-IN`) for budgets and expense entries.
+- 💎 **Upgrade Tier Page**: Pro membership tier preview card detailing available features.
+
+---
+
+## 🛠️ Tech Stack & Dependencies
+
+| Layer | Technology |
+| :--- | :--- |
+| **Framework** | [Next.js 16 (App Router)](https://nextjs.org/) |
+| **UI Library** | [React 19](https://react.dev/) |
+| **Auth Provider** | [@clerk/nextjs](https://clerk.com/) |
+| **Database** | [Neon PostgreSQL Serverless](https://neon.tech/) |
+| **ORM** | [Drizzle ORM](https://orm.drizzle.team/) |
+| **Styling** | [Tailwind CSS v4](https://tailwindcss.com/) & [Lucide Icons](https://lucide.dev/) |
+| **UI Components & Toasts** | [@base-ui/react](https://base-ui.com/) |
+| **Data Visualization** | [Recharts](https://recharts.org/) |
+| **Emoji Selector** | [emoji-picker-react](https://github.com/ealush/emoji-picker-react) |
+
+---
+
+## 📁 Application Structure & Routes
+
+```text
+app/
+├── (auth)/                  # Clerk Sign-in & Sign-up split-screen layout
+│   ├── sign-in/             # Catch-all sign-in route
+│   └── sign-up/             # Catch-all sign-up route
+├── (routes)/
+│   └── dashboard/           # Protected dashboard layout & pages
+│       ├── _components/     # Dashboard Header, Mobile SlideNav, CardInfo, BarChart, ExpenseListTable
+│       ├── budgets/         # Budget listing, creation, and item cards
+│       ├── expenses/        # All expenses overview page & budget-specific expenses [id]
+│       └── upgrade/         # Pro plan upgrade preview page
+├── _components/             # Landing page Header & Hero CTA
+├── globals.css              # Global styles & Tailwind configuration
+├── layout.js                # Root layout with ClerkProvider & Toast notifications
+└── page.js                  # Landing page
+```
+
+---
+
+## 🔑 Environment Variables Setup
+
+Create a `.env.local` file in the root directory and add the following keys:
 
 ```env
+# Clerk Authentication Configuration
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
 CLERK_SECRET_KEY=sk_test_...
 NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
 NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
 NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/
 NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
+
+# Neon Database Connection String
+DATABASE_URL=postgresql://user:password@ep-sample-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require
+NEXT_PUBLIC_DATABASE_URL=postgresql://user:password@ep-sample-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require
 ```
 
 ---
 
-## Getting Started
+## 🚀 Getting Started
 
 1. **Install Dependencies**:
    ```bash
    npm install
    ```
 
-2. **Run Development Server**:
+2. **Push Database Schema**:
+   Push the Drizzle ORM schema to your Neon PostgreSQL database:
+   ```bash
+   npm run db:push
+   ```
+
+3. **Open Drizzle Studio (Optional)**:
+   Inspect database tables and records visually:
+   ```bash
+   npm run db:studio
+   ```
+
+4. **Run Development Server**:
    ```bash
    npm run dev
    ```
+   *Note: The dev script is configured with `-H 0.0.0.0` allowing local network access from mobile devices connected to the same Wi-Fi network at `http://<YOUR_LOCAL_IP>:3000`.*
 
-3. **View Auth Pages**:
-   - Home Page: `http://localhost:3000`
-   - Sign In Page: `http://localhost:3000/sign-in`
-   - Sign Up Page: `http://localhost:3000/sign-up`
-   - Dashboard: `http://localhost:3000/dashboard` (Protected route)
-
-4. **Build Production Application**:
+5. **Build Production Bundle**:
    ```bash
    npm run build
    ```
-5. **Made it compactable with mobile phone**:
-   ```add the lots of feacture and made it workable```
+
+6. **Start Production Server**:
+   ```bash
+   npm start
+   ```
+
+---
+
+## 📝 Change Log & Project Documentation
+
+For a complete record of all architecture decisions, bug fixes, console error mitigations, database migrations, and feature updates, see [`ashu.md`](file:///c:/Users/ASHUTOSH/OneDrive/Pictures/Desktop/FINAL/S.E.T/expense-tracker/ashu.md).
+
+## Helper
+
+@Tubeguruji[youtube]
+
+### progress ###
+
+upgrade is not functionable just added for show 

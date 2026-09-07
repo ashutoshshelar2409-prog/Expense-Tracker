@@ -130,15 +130,16 @@ function Expenses({ params }) {
     };
 
     return (
-        <div className='p-10'>
-            <h2 className='text-2xl font-bold flex justify-between items-center text-slate-800'>
-                <span className='flex gap-2 items-center'>
+        <div className='p-4 sm:p-6 md:p-10'>
+            <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6'>
+                <span className='flex gap-2 items-center text-xl sm:text-2xl font-bold text-slate-800 flex-wrap'>
                     <Link href="/dashboard/budgets">
                         <ArrowLeft className='cursor-pointer w-6 h-6 hover:text-indigo-600 transition-colors' />
                     </Link>
-                    My Expenses
+                    <span className='text-slate-400 text-sm font-normal'>Expense /</span>
+                    <span className='font-semibold'>{budgetInfo?.name || "Budget"}</span>
                 </span>
-                <div className='flex gap-2 items-center'>
+                <div className='flex gap-2 items-center self-start sm:self-auto'>
                     <EditBudget budgetInfo={budgetInfo} refreshData={getBudgetInfo} />
                     <button
                         onClick={deleteBudget}
@@ -146,13 +147,13 @@ function Expenses({ params }) {
                         <Trash className='w-4 h-4' /> Delete Budget
                     </button>
                 </div>
-            </h2>
+            </div>
 
-            <div className='grid grid-cols-1 md:grid-cols-2 mt-6 gap-6'>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                 {budgetInfo ? (
                     <BudgetItem budget={budgetInfo} />
                 ) : (
-                    <div className='h-45 w-full bg-slate-100 animate-pulse rounded-2xl border border-slate-200/60' />
+                    <div className='h-[180px] w-full bg-slate-100 animate-pulse rounded-2xl border border-slate-200/60' />
                 )}
 
                 {/* Add Expense Form */}
@@ -197,29 +198,31 @@ function Expenses({ params }) {
             <div className='mt-8'>
                 <h2 className='font-bold text-xl text-slate-800 mb-4'>Latest Expenses</h2>
                 {expensesList.length > 0 ? (
-                    <div className='border border-slate-200/80 rounded-2xl overflow-hidden bg-white shadow-sm'>
-                        <div className='grid grid-cols-4 bg-slate-50 p-4 border-b border-slate-200/80 font-bold text-xs uppercase tracking-wider text-slate-500'>
-                            <h2>Name</h2>
-                            <h2>Amount</h2>
-                            <h2>Date</h2>
-                            <h2 className='text-right pr-4'>Action</h2>
-                        </div>
-                        {expensesList.map((expense) => (
-                            <div key={expense.id} className='grid grid-cols-4 p-4 border-b border-slate-100 text-sm font-medium text-slate-700 items-center hover:bg-slate-50/80 transition-colors'>
-                                <h2>{expense.name}</h2>
-                                <h2 className='text-indigo-600 font-semibold'>₹{Number(expense.amount).toLocaleString('en-IN')}</h2>
-                                <h2 className='text-slate-400 text-xs'>{expense.createdAt}</h2>
-                                <div className='text-right pr-2 flex items-center justify-end gap-1'>
-                                    <EditExpense expense={expense} refreshData={() => { getBudgetInfo(); getExpensesList(); }} />
-                                    <button
-                                        onClick={() => deleteExpense(expense)}
-                                        className='text-slate-400 hover:text-rose-600 p-1.5 rounded-lg hover:bg-rose-50 transition-all'
-                                        title="Delete Expense">
-                                        <Trash className='w-4 h-4' />
-                                    </button>
-                                </div>
+                    <div className='border border-slate-200/80 rounded-2xl overflow-hidden bg-white shadow-sm overflow-x-auto'>
+                        <div className='min-w-125'>
+                            <div className='grid grid-cols-4 bg-slate-50 p-4 border-b border-slate-200/80 font-bold text-xs uppercase tracking-wider text-slate-500'>
+                                <h2>Name</h2>
+                                <h2>Amount</h2>
+                                <h2>Date</h2>
+                                <h2 className='text-right pr-4'>Action</h2>
                             </div>
-                        ))}
+                            {expensesList.map((expense) => (
+                                <div key={expense.id} className='grid grid-cols-4 p-4 border-b border-slate-100 text-sm font-medium text-slate-700 items-center hover:bg-slate-50/80 transition-colors'>
+                                    <h2>{expense.name}</h2>
+                                    <h2 className='text-indigo-600 font-semibold'>₹{Number(expense.amount).toLocaleString('en-IN')}</h2>
+                                    <h2 className='text-slate-400 text-xs'>{expense.createdAt}</h2>
+                                    <div className='text-right pr-2 flex items-center justify-end gap-1'>
+                                        <EditExpense expense={expense} refreshData={() => { getBudgetInfo(); getExpensesList(); }} />
+                                        <button
+                                            onClick={() => deleteExpense(expense)}
+                                            className='text-slate-400 hover:text-rose-600 p-1.5 rounded-lg hover:bg-rose-50 transition-all'
+                                            title="Delete Expense">
+                                            <Trash className='w-4 h-4' />
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 ) : (
                     <div className='p-8 text-center border border-dashed border-slate-200 rounded-2xl text-slate-400 font-medium text-sm bg-slate-50/50'>

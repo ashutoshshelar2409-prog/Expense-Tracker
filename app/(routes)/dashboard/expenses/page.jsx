@@ -66,40 +66,42 @@ function ExpensesPage() {
     };
 
     return (
-        <div className='p-10'>
-            <h2 className='font-bold text-3xl text-slate-800 mb-6'>My Expenses</h2>
+        <div className='p-4 sm:p-6 md:p-10'>
+            <h2 className='font-bold text-2xl sm:text-3xl text-slate-800 mb-6'>My Expenses</h2>
             {loading ? (
                 <div className='w-full bg-slate-100 rounded-2xl h-60 animate-pulse border border-slate-200/60' />
             ) : expensesList.length > 0 ? (
-                <div className='border border-slate-200/80 rounded-2xl overflow-hidden bg-white shadow-sm'>
-                    <div className='grid grid-cols-5 bg-slate-50 p-4 border-b border-slate-200/80 font-bold text-xs uppercase tracking-wider text-slate-500'>
-                        <h2>Name</h2>
-                        <h2>Amount</h2>
-                        <h2>Budget</h2>
-                        <h2>Date</h2>
-                        <h2 className='text-right pr-4'>Action</h2>
-                    </div>
-                    {expensesList.map((expense) => (
-                        <div key={expense.id} className='grid grid-cols-5 p-4 border-b border-slate-100 text-sm font-medium text-slate-700 items-center hover:bg-slate-50/80 transition-colors'>
-                            <h2>{expense.name}</h2>
-                            <h2 className='text-indigo-600 font-semibold'>₹{Number(expense.amount).toLocaleString('en-IN')}</h2>
-                            <h2>
-                                <Link href={`/dashboard/expenses/${expense.budgetId}`} className='text-indigo-600 hover:underline bg-indigo-50 px-2.5 py-1 rounded-md text-xs font-semibold'>
-                                    {expense.budgetName}
-                                </Link>
-                            </h2>
-                            <h2 className='text-slate-400 text-xs'>{expense.createdAt}</h2>
-                            <div className='text-right pr-2 flex items-center justify-end gap-1'>
-                                <EditExpense expense={expense} refreshData={getAllExpenses} />
-                                <button
-                                    onClick={() => deleteExpense(expense)}
-                                    className='text-slate-400 hover:text-rose-600 p-1.5 rounded-lg hover:bg-rose-50 transition-all'
-                                    title="Delete Expense">
-                                    <Trash className='w-4 h-4' />
-                                </button>
-                            </div>
+                <div className='border border-slate-200/80 rounded-2xl overflow-hidden bg-white shadow-sm overflow-x-auto'>
+                    <div className='min-w-150'>
+                        <div className='grid grid-cols-5 bg-slate-50 p-4 border-b border-slate-200/80 font-bold text-xs uppercase tracking-wider text-slate-500'>
+                            <h2>Name</h2>
+                            <h2>Amount</h2>
+                            <h2>Budget</h2>
+                            <h2>Date</h2>
+                            <h2 className='text-right pr-4'>Action</h2>
                         </div>
-                    ))}
+                        {expensesList.map((expense) => (
+                            <div key={expense.id} className='grid grid-cols-5 p-4 border-b border-slate-100 text-sm font-medium text-slate-700 items-center hover:bg-slate-50/80 transition-colors'>
+                                <h2>{expense.name}</h2>
+                                <h2 className='text-indigo-600 font-semibold'>₹{Number(expense.amount).toLocaleString('en-IN')}</h2>
+                                <h2>
+                                    <Link href={`/dashboard/expenses/${expense.budgetId}`} className='text-indigo-600 hover:underline bg-indigo-50 px-2.5 py-1 rounded-md text-xs font-semibold'>
+                                        {expense.budgetName}
+                                    </Link>
+                                </h2>
+                                <h2 className='text-slate-400 text-xs'>{expense.createdAt}</h2>
+                                <div className='text-right pr-2 flex items-center justify-end gap-1'>
+                                    <EditExpense expense={expense} refreshData={getAllExpenses} />
+                                    <button
+                                        onClick={() => deleteExpense(expense)}
+                                        className='text-slate-400 hover:text-rose-600 p-1.5 rounded-lg hover:bg-rose-50 transition-all'
+                                        title="Delete Expense">
+                                        <Trash className='w-4 h-4' />
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             ) : (
                 <div className='p-12 text-center border border-dashed border-slate-200 rounded-2xl bg-white shadow-sm flex flex-col items-center justify-center gap-3'>

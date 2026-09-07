@@ -85,7 +85,7 @@ function CreateBudget({ refreshData }) {
           </button>
         </DialogTrigger>
 
-        <DialogContent className="sm:max-w-106.25 rounded-2xl p-6 bg-white shadow-2xl border border-slate-100">
+        <DialogContent className="sm:max-w-md rounded-2xl p-6 bg-white shadow-2xl border border-slate-100">
           <DialogHeader className="space-y-2">
             <div className="flex items-center gap-2">
               <div className="p-2 rounded-lg bg-indigo-100/80 text-indigo-600">

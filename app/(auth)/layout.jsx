@@ -28,7 +28,7 @@ export default function AuthLayout({ children }) {
             </Link>
 
             <h2 className="text-3xl font-bold text-white sm:text-4xl">
-              Take Control of Your Student Budget
+              Take Control of Your Budget
             </h2>
 
             <p className="mt-4 leading-relaxed text-slate-200">
@@ -54,7 +54,7 @@ export default function AuthLayout({ children }) {
           </div>
 
           {/* Form Container with guaranteed layout space for Clerk component */}
-          <div className="w-full max-w-md flex justify-center items-center min-h-[400px] py-4">
+          <div className="w-full max-w-md flex justify-center items-center min-h-100 py-4">
             {children}
           </div>
         </main>
