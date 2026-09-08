@@ -153,7 +153,7 @@ function Expenses({ params }) {
                 {budgetInfo ? (
                     <BudgetItem budget={budgetInfo} />
                 ) : (
-                    <div className='h-[180px] w-full bg-slate-100 animate-pulse rounded-2xl border border-slate-200/60' />
+                    <div className='h-45 `w-full bg-slate-100 animate-pulse rounded-2xl border border-slate-200/60' />
                 )}
 
                 {/* Add Expense Form */}

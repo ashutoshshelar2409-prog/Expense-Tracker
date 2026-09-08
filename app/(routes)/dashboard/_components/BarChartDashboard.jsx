@@ -7,7 +7,7 @@ function BarChartDashboard({ budgetList }) {
         <div className='border border-slate-200/80 rounded-2xl p-5 bg-white shadow-sm'>
             <h2 className='text-base font-bold text-slate-800 mb-4'>Budget Activity Overview</h2>
             {budgetList && budgetList.length > 0 ? (
-                <div className='w-full h-[300px]'>
+                <div className='w-full h-[75]'>
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart
                             data={budgetList}
@@ -25,7 +25,7 @@ function BarChartDashboard({ budgetList }) {
                     </ResponsiveContainer>
                 </div>
             ) : (
-                <div className='h-[300px] flex items-center justify-center border border-dashed border-slate-200 rounded-xl text-slate-400 text-xs font-medium bg-slate-50/50'>
+                <div className='h-75 flex items-center justify-center border border-dashed border-slate-200 rounded-xl text-slate-400 text-xs font-medium bg-slate-50/50'>
                     No budget data available to display chart.
                 </div>
             )}
