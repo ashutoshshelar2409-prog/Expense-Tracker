@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "db:push": "npx drizzle-kit push",
-    "db:studio": "npx drizzle-kit studio"
+    "db:studio": "npx drizzle-kit studio",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
@@ -32,6 +34,7 @@
     "@tailwindcss/postcss": "^4",
     "drizzle-kit": "^1.0.0-rc.5-ab785fc",
     "tailwindcss": "^4",
-    "tsx": "^4.23.12"
+    "tsx": "^4.23.12",
+    "vitest": "^5.0.2"
   }
 }
