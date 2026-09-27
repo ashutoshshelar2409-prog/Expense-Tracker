@@ -1,13 +1,11 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { db } from '@/utils/dbConfig';
-import { Budgets, Expenses as ExpensesTable } from '@/utils/schema';
-import { eq, desc } from 'drizzle-orm';
 import { useUser } from '@clerk/nextjs';
 import { Trash } from 'lucide-react';
 import { toast } from '@/components/ui/toast';
 import Link from 'next/link';
 import EditExpense from './_components/EditExpense';
+import { getUserExpenses, deleteExpense as deleteExpenseAction } from '@/actions/expenses';
 
 function ExpensesPage() {
     const { user } = useUser();
@@ -23,23 +21,7 @@ function ExpensesPage() {
     const getAllExpenses = async () => {
         try {
             setLoading(true);
-            const email = user?.primaryEmailAddress?.emailAddress;
-            if (!email) return;
-
-            const result = await db
-                .select({
-                    id: ExpensesTable.id,
-                    name: ExpensesTable.name,
-                    amount: ExpensesTable.amount,
-                    createdAt: ExpensesTable.createdAt,
-                    budgetName: Budgets.name,
-                    budgetId: Budgets.id,
-                })
-                .from(ExpensesTable)
-                .innerJoin(Budgets, eq(ExpensesTable.budgetId, Budgets.id))
-                .where(eq(Budgets.createdBy, email))
-                .orderBy(desc(ExpensesTable.id));
-
+            const result = await getUserExpenses();
             setExpensesList(result || []);
         } catch (error) {
             console.error("Error fetching all expenses:", error);
@@ -49,19 +31,17 @@ function ExpensesPage() {
         }
     };
 
-    const deleteExpense = async (expense) => {
+    const handleDeleteExpense = async (expense) => {
         try {
-            const result = await db.delete(ExpensesTable)
-                .where(eq(ExpensesTable.id, expense.id))
-                .returning();
+            const res = await deleteExpenseAction(expense.id);
 
-            if (result) {
+            if (res?.success) {
                 toast.success("Expense Deleted!");
                 getAllExpenses();
             }
         } catch (error) {
             console.error("Error deleting expense:", error);
-            toast.error("Failed to delete expense");
+            toast.error(error.message || "Failed to delete expense");
         }
     };
 
@@ -93,7 +73,7 @@ function ExpensesPage() {
                                 <div className='text-right pr-2 flex items-center justify-end gap-1'>
                                     <EditExpense expense={expense} refreshData={getAllExpenses} />
                                     <button
-                                        onClick={() => deleteExpense(expense)}
+                                        onClick={() => handleDeleteExpense(expense)}
                                         className='text-slate-400 hover:text-rose-600 p-1.5 rounded-lg hover:bg-rose-50 transition-all'
                                         title="Delete Expense">
                                         <Trash className='w-4 h-4' />

@@ -2,11 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 import CardInfo from './_components/CardInfo';
-import { getTableColumns, sql, eq, desc } from 'drizzle-orm';
-import { Budgets, Expenses as ExpensesTable } from '@/utils/schema';
-import { db } from '@/utils/dbConfig';
 import BarChartDashboard from './_components/BarChartDashboard';
 import ExpenseListTable from './_components/ExpenseListTable';
+import { getUserBudgets } from '@/actions/budgets';
+import { getUserExpenses } from '@/actions/expenses';
 
 function Dashboard() {
   const { user } = useUser();
@@ -24,19 +23,7 @@ function Dashboard() {
   const getBudgetList = async () => {
     try {
       setLoading(true);
-      const email = user?.primaryEmailAddress?.emailAddress;
-      if (!email) return;
-
-      const result = await db.select({
-        ...getTableColumns(Budgets),
-        totalSpend: sql`COALESCE(sum(CAST(${ExpensesTable.amount} AS NUMERIC)), 0)`.mapWith(Number),
-        totalItem: sql`count(${ExpensesTable.id})`.mapWith(Number),
-      }).from(Budgets)
-        .leftJoin(ExpensesTable, eq(Budgets.id, ExpensesTable.budgetId))
-        .where(eq(Budgets.createdBy, email))
-        .groupBy(Budgets.id, Budgets.name, Budgets.amount, Budgets.icon, Budgets.createdBy)
-        .orderBy(desc(Budgets.id));
-
+      const result = await getUserBudgets();
       setBudgetList(result || []);
     } catch (error) {
       console.error("Error fetching budget list:", error);
@@ -47,19 +34,7 @@ function Dashboard() {
 
   const getExpensesList = async () => {
     try {
-      const email = user?.primaryEmailAddress?.emailAddress;
-      if (!email) return;
-
-      const result = await db.select({
-        id: ExpensesTable.id,
-        name: ExpensesTable.name,
-        amount: ExpensesTable.amount,
-        createdAt: ExpensesTable.createdAt,
-      }).from(ExpensesTable)
-        .innerJoin(Budgets, eq(ExpensesTable.budgetId, Budgets.id))
-        .where(eq(Budgets.createdBy, email))
-        .orderBy(desc(ExpensesTable.id));
-
+      const result = await getUserExpenses();
       setExpensesList(result || []);
     } catch (error) {
       console.error("Error fetching expenses list:", error);

@@ -10,11 +10,9 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { db } from '@/utils/dbConfig';
-import { Expenses as ExpensesTable } from '@/utils/schema';
-import { eq } from 'drizzle-orm';
 import { toast } from '@/components/ui/toast';
 import { Pen, Tag, IndianRupee, Loader2 } from 'lucide-react';
+import { updateExpense } from '@/actions/expenses';
 
 function EditExpense({ expense, refreshData }) {
   const [open, setOpen] = useState(false);
@@ -37,15 +35,13 @@ function EditExpense({ expense, refreshData }) {
 
     try {
       setLoading(true);
-      const result = await db.update(ExpensesTable)
-        .set({
-          name: name,
-          amount: amount,
-        })
-        .where(eq(ExpensesTable.id, expense.id))
-        .returning();
+      const res = await updateExpense({
+        expenseId: expense?.id,
+        name,
+        amount,
+      });
 
-      if (result) {
+      if (res?.success) {
         toast.success("Expense Updated Successfully! ✏️");
         setOpen(false);
         if (refreshData) {
@@ -54,7 +50,7 @@ function EditExpense({ expense, refreshData }) {
       }
     } catch (error) {
       console.error("Error updating expense:", error);
-      toast.error("Failed to update expense");
+      toast.error(error.message || "Failed to update expense");
     } finally {
       setLoading(false);
     }

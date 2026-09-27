@@ -1,12 +1,16 @@
 import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
-import * as schema from'./schema'
+import * as schema from './schema';
 
-const dbUrl = process.env.NEXT_PUBLIC_DATABASE_URL || process.env.DATABASE_URL;
+if (typeof window !== 'undefined') {
+  throw new Error("SERVER-ONLY: Database configuration cannot be imported or executed in client components.");
+}
+
+const dbUrl = process.env.DATABASE_URL;
 
 if (!dbUrl) {
   throw new Error(
-    "No database connection string was provided. Please ensure NEXT_PUBLIC_DATABASE_URL or DATABASE_URL is set in .env.local."
+    "No database connection string was provided. Please ensure DATABASE_URL is set in environment variables."
   );
 }
 

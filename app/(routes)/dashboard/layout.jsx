@@ -2,11 +2,9 @@
 import React, { useEffect } from 'react'
 import SlideNav from './_components/SlideNav'
 import DashboardHeader from './_components/DashboardHeader'
-import { db } from '@/utils/dbConfig'
-import { Budgets } from '@/utils/schema'
-import { eq } from 'drizzle-orm'
 import { useUser } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
+import { checkUserHasBudgets } from '@/actions/budgets'
 
 function Dashboardlayout({ children }) {
   const { user } = useUser();
@@ -20,18 +18,12 @@ function Dashboardlayout({ children }) {
 
   const checkUserBudgets = async () => {
     try {
-      const email = user?.primaryEmailAddress?.emailAddress;
-      if (!email) return;
-      
-      const result = await db.select()
-        .from(Budgets)
-        .where(eq(Budgets.createdBy, email));
-
-      if (result?.length === 0) {
+      const res = await checkUserHasBudgets();
+      if (!res?.hasBudgets) {
         router.replace('/dashboard/budgets');
       }
     } catch (error) {
-      console.error("Error fetching user budgets:", error);
+      console.error("Error checking user budgets:", error);
     }
   }
 

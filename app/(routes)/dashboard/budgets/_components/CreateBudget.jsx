@@ -11,11 +11,9 @@ import {
 import EmojiPicker from 'emoji-picker-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { db } from '@/utils/dbConfig';
-import { Budgets } from '@/utils/schema';
 import { toast } from '@/components/ui/toast';
-import { useUser } from '@clerk/nextjs';
 import { Plus, Sparkles, Tag, IndianRupee, Loader2, Smile } from 'lucide-react';
+import { createBudget } from '@/actions/budgets';
 
 function CreateBudget({ refreshData }) {
   const [emojiIcon, setEmojiIcon] = useState('💰');
@@ -24,30 +22,20 @@ function CreateBudget({ refreshData }) {
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const { user } = useUser();
 
   const onCreateBudget = async () => {
     if (!name || !amount) return;
 
     try {
       setLoading(true);
-      const userEmail = user?.primaryEmailAddress?.emailAddress;
 
-      if (!userEmail) {
-        toast.error("User email not found. Please log in again.");
-        return;
-      }
+      const res = await createBudget({
+        name,
+        amount,
+        icon: emojiIcon,
+      });
 
-      const result = await db.insert(Budgets)
-        .values({
-          name: name,
-          amount: amount,
-          createdBy: userEmail,
-          icon: emojiIcon
-        })
-        .returning({ insertedId: Budgets.id });
-
-      if (result && result.length > 0) {
+      if (res?.success) {
         toast.success("New Budget Created Successfully! 🎉");
         setName('');
         setAmount('');
@@ -60,7 +48,7 @@ function CreateBudget({ refreshData }) {
       }
     } catch (error) {
       console.error("Error creating budget:", error);
-      toast.error("Failed to create budget. Please try again.");
+      toast.error(error.message || "Failed to create budget. Please try again.");
     } finally {
       setLoading(false);
     }

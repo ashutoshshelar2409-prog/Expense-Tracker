@@ -1,21 +1,16 @@
 'use client';
 import React from 'react';
-import { db } from '@/utils/dbConfig';
-import { Expenses as ExpensesTable } from '@/utils/schema';
-import { eq } from 'drizzle-orm';
 import { Trash } from 'lucide-react';
 import { toast } from '@/components/ui/toast';
-import Link from 'next/link';
 import EditExpense from '../expenses/_components/EditExpense';
+import { deleteExpense as deleteExpenseAction } from '@/actions/expenses';
 
 function ExpenseListTable({ expensesList = [], refreshData, loading = false }) {
-    const deleteExpense = async (expense) => {
+    const handleDeleteExpense = async (expense) => {
         try {
-            const result = await db.delete(ExpensesTable)
-                .where(eq(ExpensesTable.id, expense.id))
-                .returning();
+            const res = await deleteExpenseAction(expense.id);
 
-            if (result) {
+            if (res?.success) {
                 toast.success("Expense Deleted!");
                 if (refreshData) {
                     refreshData();
@@ -23,7 +18,7 @@ function ExpenseListTable({ expensesList = [], refreshData, loading = false }) {
             }
         } catch (error) {
             console.error("Error deleting expense:", error);
-            toast.error("Failed to delete expense");
+            toast.error(error.message || "Failed to delete expense");
         }
     };
 
@@ -49,7 +44,7 @@ function ExpenseListTable({ expensesList = [], refreshData, loading = false }) {
                                 <div className='text-right pr-2 flex items-center justify-end gap-1'>
                                     <EditExpense expense={expense} refreshData={refreshData} />
                                     <button
-                                        onClick={() => deleteExpense(expense)}
+                                        onClick={() => handleDeleteExpense(expense)}
                                         className='text-slate-400 hover:text-rose-600 p-1.5 rounded-lg hover:bg-rose-50 transition-all'
                                         title="Delete Expense">
                                         <Trash className='w-4 h-4' />

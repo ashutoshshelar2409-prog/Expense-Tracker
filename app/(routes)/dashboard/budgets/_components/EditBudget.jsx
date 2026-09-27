@@ -11,11 +11,9 @@ import {
 import EmojiPicker from 'emoji-picker-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { db } from '@/utils/dbConfig';
-import { Budgets } from '@/utils/schema';
-import { eq } from 'drizzle-orm';
 import { toast } from '@/components/ui/toast';
 import { Pen, Sparkles, Tag, IndianRupee, Loader2, Smile } from 'lucide-react';
+import { updateBudget } from '@/actions/budgets';
 
 function EditBudget({ budgetInfo, refreshData }) {
   const [emojiIcon, setEmojiIcon] = useState('💰');
@@ -38,16 +36,15 @@ function EditBudget({ budgetInfo, refreshData }) {
 
     try {
       setLoading(true);
-      const result = await db.update(Budgets)
-        .set({
-          name: name,
-          amount: amount,
-          icon: emojiIcon,
-        })
-        .where(eq(Budgets.id, budgetInfo.id))
-        .returning();
 
-      if (result && result.length > 0) {
+      const res = await updateBudget({
+        budgetId: budgetInfo?.id,
+        name,
+        amount,
+        icon: emojiIcon,
+      });
+
+      if (res?.success) {
         toast.success("Budget Updated Successfully! 🎉");
         setOpen(false);
         setOpenEmojiPicker(false);
@@ -57,7 +54,7 @@ function EditBudget({ budgetInfo, refreshData }) {
       }
     } catch (error) {
       console.error("Error updating budget:", error);
-      toast.error("Failed to update budget.");
+      toast.error(error.message || "Failed to update budget.");
     } finally {
       setLoading(false);
     }

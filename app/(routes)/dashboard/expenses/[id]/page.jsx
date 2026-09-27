@@ -1,8 +1,5 @@
 "use client"
 import React, { use, useEffect, useState } from 'react';
-import { db } from '@/utils/dbConfig';
-import { Budgets, Expenses as ExpensesTable } from '@/utils/schema';
-import { getTableColumns, sql, eq, desc } from 'drizzle-orm';
 import { useUser } from '@clerk/nextjs';
 import BudgetItem from '../../budgets/_components/BudgetItem';
 import { Trash, Loader2, ArrowLeft } from 'lucide-react';
@@ -11,6 +8,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import EditExpense from '../_components/EditExpense';
 import EditBudget from '../../budgets/_components/EditBudget';
+import { getBudgetInfo as getBudgetInfoAction, deleteBudget as deleteBudgetAction } from '@/actions/budgets';
+import { getExpensesByBudgetId, createExpense, deleteExpense as deleteExpenseAction } from '@/actions/expenses';
 
 function Expenses({ params }) {
     const resolvedParams = params && typeof params.then === 'function' ? use(params) : params;
@@ -32,21 +31,13 @@ function Expenses({ params }) {
 
     const getBudgetInfo = async () => {
         try {
-            const email = user?.primaryEmailAddress?.emailAddress;
-            if (!email || !id) return;
-
-            const result = await db.select({
-                ...getTableColumns(Budgets),
-                totalSpend: sql`COALESCE(sum(CAST(${ExpensesTable.amount} AS NUMERIC)), 0)`.mapWith(Number),
-                totalItem: sql`count(${ExpensesTable.id})`.mapWith(Number)
-            }).from(Budgets)
-                .leftJoin(ExpensesTable, eq(Budgets.id, ExpensesTable.budgetId))
-                .where(eq(Budgets.createdBy, email))
-                .where(eq(Budgets.id, Number(id)))
-                .groupBy(Budgets.id, Budgets.name, Budgets.amount, Budgets.icon, Budgets.createdBy);
-
-            if (result && result.length > 0) {
-                setBudgetInfo(result[0]);
+            if (!id) return;
+            const result = await getBudgetInfoAction(id);
+            if (result) {
+                setBudgetInfo(result);
+            } else {
+                toast.error("Budget not found or unauthorized");
+                router.replace('/dashboard/budgets');
             }
         } catch (error) {
             console.error("Error fetching budget info:", error);
@@ -57,9 +48,7 @@ function Expenses({ params }) {
     const getExpensesList = async () => {
         try {
             if (!id) return;
-            const result = await db.select().from(ExpensesTable)
-                .where(eq(ExpensesTable.budgetId, Number(id)))
-                .orderBy(desc(ExpensesTable.id));
+            const result = await getExpensesByBudgetId(id);
             setExpensesList(result || []);
         } catch (error) {
             console.error("Error fetching expenses list:", error);
@@ -74,15 +63,13 @@ function Expenses({ params }) {
 
         try {
             setLoading(true);
-            const currentDate = new Date().toLocaleDateString('en-GB');
-            const result = await db.insert(ExpensesTable).values({
-                name: name,
-                amount: amount,
-                budgetId: Number(id),
-                createdAt: currentDate
-            }).returning();
+            const res = await createExpense({
+                name,
+                amount,
+                budgetId: id,
+            });
 
-            if (result) {
+            if (res?.success) {
                 toast.success("New Expense Added!");
                 setName('');
                 setAmount('');
@@ -91,41 +78,40 @@ function Expenses({ params }) {
             }
         } catch (error) {
             console.error("Error adding expense:", error);
-            toast.error("Failed to add expense");
+            toast.error(error.message || "Failed to add expense");
         } finally {
             setLoading(false);
         }
     };
 
-    const deleteExpense = async (expense) => {
+    const handleDeleteExpense = async (expense) => {
         try {
-            const result = await db.delete(ExpensesTable)
-                .where(eq(ExpensesTable.id, expense.id))
-                .returning();
+            const res = await deleteExpenseAction(expense.id);
 
-            if (result) {
+            if (res?.success) {
                 toast.success("Expense Deleted!");
                 getBudgetInfo();
                 getExpensesList();
             }
         } catch (error) {
             console.error("Error deleting expense:", error);
-            toast.error("Failed to delete expense");
+            toast.error(error.message || "Failed to delete expense");
         }
     };
 
-    const deleteBudget = async () => {
+    const handleDeleteBudget = async () => {
         if (!window.confirm("Are you sure you want to delete this budget and all its expenses?")) {
             return;
         }
         try {
-            await db.delete(ExpensesTable).where(eq(ExpensesTable.budgetId, Number(id)));
-            await db.delete(Budgets).where(eq(Budgets.id, Number(id)));
-            toast.success("Budget Deleted Successfully");
-            router.replace('/dashboard/budgets');
+            const res = await deleteBudgetAction(id);
+            if (res?.success) {
+                toast.success("Budget Deleted Successfully");
+                router.replace('/dashboard/budgets');
+            }
         } catch (error) {
             console.error("Error deleting budget:", error);
-            toast.error("Failed to delete budget");
+            toast.error(error.message || "Failed to delete budget");
         }
     };
 
@@ -142,7 +128,7 @@ function Expenses({ params }) {
                 <div className='flex gap-2 items-center self-start sm:self-auto'>
                     <EditBudget budgetInfo={budgetInfo} refreshData={getBudgetInfo} />
                     <button
-                        onClick={deleteBudget}
+                        onClick={handleDeleteBudget}
                         className='flex gap-2 items-center bg-rose-600 hover:bg-rose-700 text-white text-sm font-medium px-4 py-2 rounded-xl transition-all shadow-sm'>
                         <Trash className='w-4 h-4' /> Delete Budget
                     </button>
@@ -153,7 +139,7 @@ function Expenses({ params }) {
                 {budgetInfo ? (
                     <BudgetItem budget={budgetInfo} />
                 ) : (
-                    <div className='h-45 `w-full bg-slate-100 animate-pulse rounded-2xl border border-slate-200/60' />
+                    <div className='h-45 w-full bg-slate-100 animate-pulse rounded-2xl border border-slate-200/60' />
                 )}
 
                 {/* Add Expense Form */}
@@ -214,7 +200,7 @@ function Expenses({ params }) {
                                     <div className='text-right pr-2 flex items-center justify-end gap-1'>
                                         <EditExpense expense={expense} refreshData={() => { getBudgetInfo(); getExpensesList(); }} />
                                         <button
-                                            onClick={() => deleteExpense(expense)}
+                                            onClick={() => handleDeleteExpense(expense)}
                                             className='text-slate-400 hover:text-rose-600 p-1.5 rounded-lg hover:bg-rose-50 transition-all'
                                             title="Delete Expense">
                                             <Trash className='w-4 h-4' />
