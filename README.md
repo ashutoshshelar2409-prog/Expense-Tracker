@@ -128,11 +128,3 @@ NEXT_PUBLIC_DATABASE_URL=postgresql://user:password@ep-sample-pooler.us-east-2.a
 ## 📝 Change Log & Project Documentation
 
 For a complete record of all architecture decisions, bug fixes, console error mitigations, database migrations, and feature updates, see [`ashu.md`](file:///c:/Users/ASHUTOSH/OneDrive/Pictures/Desktop/FINAL/S.E.T/expense-tracker/ashu.md).
-
-## Helper
-
-@Tubeguruji[youtube]
-
-### progress ###
-
-upgrade is not functionable just added for show 
